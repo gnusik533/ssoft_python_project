@@ -21,9 +21,18 @@ THEMES = {'Простейший поток': 0,
           'Система массового обслуживания с ожиданием и ограничением длины очереди': 8,
           'Многоканальная система массового обслуживания с отказами М/М/N/0': 9,
           'Многоканальная система массового обслуживания с неограниченным ожиданием': 10,
-          'Многоканальная система массового обслуживания с ожиданием и ограниченной длиной очереди': 10,
+          'Многоканальная система массового обслуживания с ожиданием и ограниченной длиной очереди': 11,
           'Задачи для самостоятельного решения 2': 12,
+          'Контрольная работа': 13,
           }
+
+
+class ProgramAuth:
+    pass
+
+
+class Testing:
+    pass
 
 
 class Ui_MainWindow(object):
@@ -58,26 +67,17 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setFamily("Ubuntu")
         font.setPointSize(11)
-        font.setBold(False)
-        font.setUnderline(False)
         font.setWeight(50)
-        font.setStrikeOut(False)
-        font.setKerning(True)
         self.listWidget.setFont(font)
-        self.listWidget.setMouseTracking(False)
-        self.listWidget.setTabletTracking(False)
         self.listWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.listWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.listWidget.setAutoFillBackground(False)
         self.listWidget.setStyleSheet("QListWidget { border-style: outset; border-width: 1px }\n"
-"QListWidget::item { border-bottom: 1px solid black }\n"
-"QListWidget::item:selected { background-color: rgb(77, 148, 255) }\n"
-"QListWidget::item:hover { background-color: rgb(153, 194, 255) }\n"
-"")
-        self.listWidget.setFrameShadow(QtWidgets.QFrame.Sunken)
+                                      "QListWidget::item { border-bottom: 1px solid black }\n"
+                                      "QListWidget::item:selected { background-color: rgb(77, 148, 255) }\n"
+                                      "QListWidget::item:hover { background-color: rgb(153, 194, 255) }")
         self.listWidget.setLineWidth(5)
         self.listWidget.setMidLineWidth(0)
-        self.listWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.listWidget.setMovement(QtWidgets.QListView.Static)
         self.listWidget.setFlow(QtWidgets.QListView.TopToBottom)
         self.listWidget.setProperty("isWrapping", False)
@@ -86,93 +86,114 @@ class Ui_MainWindow(object):
         self.listWidget.setBatchSize(100)
         self.listWidget.setWordWrap(True)
         self.listWidget.setObjectName("listWidget")
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.listWidget.addItem(item)
+
+        for i in range(len(THEMES)):
+            self.listWidget.addItem(QtWidgets.QListWidgetItem())
+
         self.scrollArea = QtWidgets.QScrollArea(self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(389, -1, 891, 711))
         self.scrollArea.setStyleSheet("border-style: outset; border-width: 1px")
         self.scrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
+
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 875, 709))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+
         self.label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.label.setGeometry(QtCore.QRect(0, 0, 891, 711))
         self.label.setText("")
-        self.label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
+        self.label.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
         self.label.setWordWrap(False)
         self.label.setObjectName("label")
+
         self.scrollArea.setWidget(self.label)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
+        self.tester_ui(MainWindow)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
+    def tester_ui(self, main_window):
+        self.tsArea = QtWidgets.QScrollArea(main_window)
+        self.tsArea.setGeometry(QtCore.QRect(389, -1, 891, 711))
+        self.tsArea.setStyleSheet("border-style: outset; border-width: 1px")
+        self.tsArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        self.tsArea.setWidgetResizable(True)
+        self.tsArea.setObjectName("scrollArea2")
+
+        self.tWidget = QtWidgets.QWidget(main_window)
+        self.tWidget.setGeometry(QtCore.QRect(0, 0, 875, 709))
+        self.tWidget.setObjectName("scrollAreaWidgetContents2")
+
+        self.layout = QtWidgets.QVBoxLayout(main_window)
+
+        self.btn_next = QtWidgets.QPushButton('Далее', main_window)
+        self.btn_next.setGeometry(0, 0, 100, 50)
+        self.btn_next.setEnabled(True)
+        self.btn_next.clicked.connect(self.next_question)
+
+        self.btn_back = QtWidgets.QPushButton('Назад', main_window)
+        self.btn_back.setGeometry(QtCore.QRect(0, 0, 100, 50))
+        self.btn_back.setEnabled(True)
+        self.btn_back.clicked.connect(self.previous_question)
+
+
+        self.label2 = QtWidgets.QLabel(self.tWidget)
+        self.label2.setGeometry(QtCore.QRect(0, 0, 891, 711))
+
+        self.label2.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+        self.label2.setWordWrap(False)
+        self.label2.setObjectName("options")
+        self.label2.setPixmap(QtGui.QPixmap('img/options.png'))
+        self.label2.resize(self.label2.pixmap().height(), self.label2.pixmap().height())
+
+        self.layout.addWidget(self.label2)
+        self.layout.addWidget(self.btn_next)
+        self.layout.addWidget(self.btn_back)
+
+        self.tWidget.setLayout(self.layout)
+
+        self.tsArea.setWidget(self.tWidget)
+
+
+        self.tsArea.hide()
+
+    def next_question(self):
+        print('next')
+        pass
+
+    def previous_question(self):
+        print('prev')
+        pass
+
+
+    def retranslateUi(self, main_window):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Теория телетрафика мультисервисных сетей"))
+        main_window.setWindowTitle(_translate("MainWindow", "Теория телетрафика мультисервисных сетей"))
+
         self.listWidget.setSortingEnabled(False)
-        __sortingEnabled = self.listWidget.isSortingEnabled()
-        self.listWidget.setSortingEnabled(False)
-        item = self.listWidget.item(0)
-        item.setText(_translate("MainWindow", "Простейший поток"))
-        item = self.listWidget.item(1)
-        item.setText(_translate("MainWindow", "Суммирование и разъединение простейших потоков"))
-        item = self.listWidget.item(2)
-        item.setText(_translate("MainWindow", "Показательный закон распределения времени обслуживания"))
-        item = self.listWidget.item(3)
-        item.setText(_translate("MainWindow", "Нестационарный Пуассоновский поток"))
-        item = self.listWidget.item(4)
-        item.setText(_translate("MainWindow", "Теорема Литтла"))
-        item = self.listWidget.item(5)
-        item.setText(_translate("MainWindow", "Задачи для самостоятельного решения 1"))
-        item = self.listWidget.item(6)
-        item.setText(_translate("MainWindow", "Одноканальная система массового обслуживания с отказами"))
-        item = self.listWidget.item(7)
-        item.setText(_translate("MainWindow", "Система массового обслуживания с ожиданием и без ограничения очереди"))
-        item = self.listWidget.item(8)
-        item.setText(_translate("MainWindow", "Система массового обслуживания с ожиданием и ограничением длины очереди"))
-        item = self.listWidget.item(9)
-        item.setText(_translate("MainWindow", "Многоканальная система массового обслуживания с отказами М/М/N/0"))
-        item = self.listWidget.item(10)
-        item.setText(_translate("MainWindow", "Многоканальная система массового обслуживания с неограниченным ожиданием"))
-        item = self.listWidget.item(11)
-        item.setText(_translate("MainWindow", "Многоканальная система массового обслуживания с ожиданием и ограниченной длиной очереди"))
-        item = self.listWidget.item(12)
-        item.setText(_translate("MainWindow", "Задачи для самостоятельного решения 2"))
-        self.listWidget.setSortingEnabled(__sortingEnabled)
+
+        for i in THEMES:
+            self.listWidget.item(THEMES[i]).setText(i)
+
         self.listWidget.itemClicked.connect(self.qlistAction)
 
     def qlistAction(self, item):
-        print(THEMES[item.text()])
-        self.label.setPixmap(QtGui.QPixmap(f'img/{THEMES[item.text()]}.png'))
-        self.label.resize(self.label.pixmap().height(), self.label.pixmap().height())
+        item_value = int(THEMES[item.text()])
+        print(item_value)
+        if item_value < 13:
+            self.tsArea.hide()
+            self.scrollArea.show()
 
+            self.scrollArea.setWidget(self.label)
+            self.label.setPixmap(QtGui.QPixmap(f'img/{item_value}.png'))
+            self.label.resize(self.label.pixmap().height(), self.label.pixmap().height())
+        elif item_value == 13:
+            self.scrollArea.hide()
+            self.tsArea.show()
 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
