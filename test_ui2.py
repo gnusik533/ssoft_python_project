@@ -117,6 +117,10 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def tester_ui(self, main_window):
+        self.curr_question = 1
+        self.MIN_QUESTION = 1
+        self.MAX_QUESTION = 23
+
         self.tsArea = QtWidgets.QScrollArea(main_window)
         self.tsArea.setGeometry(QtCore.QRect(389, -1, 891, 711))
         self.tsArea.setStyleSheet("border-style: outset; border-width: 1px")
@@ -140,7 +144,6 @@ class Ui_MainWindow(object):
         self.btn_back.setEnabled(True)
         self.btn_back.clicked.connect(self.previous_question)
 
-
         self.label2 = QtWidgets.QLabel(self.tWidget)
         self.label2.setGeometry(QtCore.QRect(0, 0, 891, 711))
 
@@ -158,17 +161,19 @@ class Ui_MainWindow(object):
 
         self.tsArea.setWidget(self.tWidget)
 
-
         self.tsArea.hide()
 
     def next_question(self):
-        print('next')
-        pass
+        if self.curr_question < self.MAX_QUESTION:
+            self.curr_question += 1
+        else:
+            self.curr_question = self.MAX_QUESTION
 
     def previous_question(self):
-        print('prev')
-        pass
-
+        if self.curr_question > self.MIN_QUESTION:
+            self.curr_question = self.curr_question - 1
+        else:
+            self.curr_question = self.MIN_QUESTION
 
     def retranslateUi(self, main_window):
         _translate = QtCore.QCoreApplication.translate
@@ -183,7 +188,6 @@ class Ui_MainWindow(object):
 
     def qlistAction(self, item):
         item_value = int(THEMES[item.text()])
-        print(item_value)
         if item_value < 13:
             self.tsArea.hide()
             self.scrollArea.show()
@@ -194,6 +198,7 @@ class Ui_MainWindow(object):
         elif item_value == 13:
             self.scrollArea.hide()
             self.tsArea.show()
+
 
 class mywindow(QtWidgets.QMainWindow):
     def __init__(self):
