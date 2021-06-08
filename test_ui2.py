@@ -32,48 +32,51 @@ class ProgramAuth:
 
 
 class Testing:
-    pass
+    def __init__(self):
+        self.answers = {}
+        self.current_questions_pack = 1  # от 1 до 7, по 3 вопроса в группе | 21 / 3 = 7
+        self.MIN_QUESTION = 1
+        self.MAX_QUESTION = 21
 
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
-        MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(1280, 720))
-        MainWindow.setMaximumSize(QtCore.QSize(1280, 720))
+class MainWindowUI(object):
+    def setupUi(self, main_window):
+        main_window.setObjectName("MainWindow")
+        main_window.resize(1280, 720)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Ignored)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(main_window.sizePolicy().hasHeightForWidth())
+        main_window.setSizePolicy(size_policy)
+        main_window.setMinimumSize(QtCore.QSize(1280, 720))
+        main_window.setMaximumSize(QtCore.QSize(1280, 720))
         font = QtGui.QFont()
-        font.setFamily("Dyuthi")
+        font.setFamily("Times New Roman")
         font.setKerning(True)
-        MainWindow.setFont(font)
-        MainWindow.setAutoFillBackground(False)
-        MainWindow.setStyleSheet("")
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        main_window.setFont(font)
+        self.tester = Testing()
+        self.centralwidget = QtWidgets.QWidget(main_window)
         self.centralwidget.setObjectName("centralwidget")
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.listWidget.setEnabled(True)
         self.listWidget.setGeometry(QtCore.QRect(0, 0, 391, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
-        self.listWidget.setSizePolicy(sizePolicy)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
+        self.listWidget.setSizePolicy(size_policy)
         self.listWidget.setMinimumSize(QtCore.QSize(0, 0))
         self.listWidget.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
-        font.setFamily("Ubuntu")
-        font.setPointSize(11)
+        font.setFamily("Times New Roman")
+        font.setPointSize(15)
         font.setWeight(50)
         self.listWidget.setFont(font)
         self.listWidget.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.listWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.listWidget.setAutoFillBackground(False)
         self.listWidget.setStyleSheet("QListWidget { border-style: outset; border-width: 1px }\n"
-                                      "QListWidget::item { border-bottom: 1px solid black }\n"
+                                      "QListWidget::item { border-bottom: 2px solid black }\n"
                                       "QListWidget::item:selected { background-color: rgb(77, 148, 255) }\n"
                                       "QListWidget::item:hover { background-color: rgb(153, 194, 255) }")
         self.listWidget.setLineWidth(5)
@@ -83,7 +86,6 @@ class Ui_MainWindow(object):
         self.listWidget.setProperty("isWrapping", False)
         self.listWidget.setLayoutMode(QtWidgets.QListView.SinglePass)
         self.listWidget.setViewMode(QtWidgets.QListView.ListMode)
-        self.listWidget.setBatchSize(100)
         self.listWidget.setWordWrap(True)
         self.listWidget.setObjectName("listWidget")
 
@@ -109,18 +111,14 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
 
         self.scrollArea.setWidget(self.label)
-        MainWindow.setCentralWidget(self.centralwidget)
+        main_window.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(MainWindow)
-        self.tester_ui(MainWindow)
+        self.ui_add_content(main_window)
+        self.tester_ui(main_window)
 
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(main_window)
 
     def tester_ui(self, main_window):
-        self.curr_question = 1
-        self.MIN_QUESTION = 1
-        self.MAX_QUESTION = 23
-
         self.tsArea = QtWidgets.QScrollArea(main_window)
         self.tsArea.setGeometry(QtCore.QRect(389, -1, 891, 711))
         self.tsArea.setStyleSheet("border-style: outset; border-width: 1px")
@@ -138,24 +136,88 @@ class Ui_MainWindow(object):
         self.btn_next.setGeometry(0, 0, 100, 50)
         self.btn_next.setEnabled(True)
         self.btn_next.clicked.connect(self.next_question)
+        self.btn_next.setStyleSheet("QPushButton { border-style: outset; border-width: 2px; border-radius: 10px;"
+                                    "border-color: black; min-width: 10em; padding: 6px; "
+                                    "background: rgb(140, 140, 140) }"
+                                    "QPushButton:hover { background: rgb(179, 179, 179) }"
+                                    "QPushButton:pressed { font: bold }")
 
         self.btn_back = QtWidgets.QPushButton('Назад', main_window)
         self.btn_back.setGeometry(QtCore.QRect(0, 0, 100, 50))
         self.btn_back.setEnabled(True)
         self.btn_back.clicked.connect(self.previous_question)
+        self.btn_back.setStyleSheet("QPushButton { border-style: outset; border-width: 2px; border-radius: 10px;"
+                                    "border-color: black; min-width: 10em; padding: 6px; "
+                                    "background: rgb(140, 140, 140) }"
+                                    "QPushButton:hover { background: rgb(179, 179, 179) }"
+                                    "QPushButton:pressed { font: bold }")
 
-        self.label2 = QtWidgets.QLabel(self.tWidget)
-        self.label2.setGeometry(QtCore.QRect(0, 0, 891, 711))
+        self.btn_end = QtWidgets.QPushButton('Закончить', main_window)
+        self.btn_end.setGeometry(0, 0, 100, 50)
+        self.btn_end.setEnabled(True)
+        self.btn_end.clicked.connect(self.end_test)
+        self.btn_end.setStyleSheet("QPushButton { border-style: outset; border-width: 2px; border-radius: 10px;"
+                                   "border-color: black; min-width: 10em; padding: 6px; "
+                                   "background: rgb(140, 140, 140) }"
+                                   "QPushButton:hover { background: rgb(179, 179, 179) }"
+                                   "QPushButton:pressed { font: bold }")
 
-        self.label2.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
-        self.label2.setWordWrap(False)
-        self.label2.setObjectName("options")
-        self.label2.setPixmap(QtGui.QPixmap('img/options.png'))
-        self.label2.resize(self.label2.pixmap().height(), self.label2.pixmap().height())
+        self.options = QtWidgets.QLabel(self.tWidget)
+        self.options.setGeometry(QtCore.QRect(0, 0, 891, 711))
 
-        self.layout.addWidget(self.label2)
+        self.options.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+        self.options.setObjectName("options")
+        self.options.setPixmap(QtGui.QPixmap('img/options.png'))
+        self.options.resize(self.options.pixmap().height(), self.options.pixmap().height())
+
+        variant_validator = QtGui.QIntValidator()
+        variant_validator.setRange(0, 9)
+
+        self.variant = QtWidgets.QLineEdit(self.tWidget)
+        self.variant.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.variant.setGeometry(0, 0, 50, 50)
+        self.variant.setPlaceholderText('Введите последнюю цифру зачетной книжки:')
+        self.variant.setValidator(variant_validator)
+
+        validator = QtGui.QDoubleValidator()
+        validator.setNotation(QtGui.QDoubleValidator.StandardNotation)
+        validator.setRange(0, 1000.0, 2)
+
+        self.question_p1 = QtWidgets.QLabel(self.tWidget)
+        self.question_p1.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+
+        self.answer_p1 = QtWidgets.QLineEdit(self.tWidget)
+        self.answer_p1.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.answer_p1.setPlaceholderText('Введите ответ:')
+        self.answer_p1.setValidator(validator)
+
+        self.question_p2 = QtWidgets.QLabel(self.tWidget)
+        self.question_p2.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+
+        self.answer_p2 = QtWidgets.QLineEdit(self.tWidget)
+        self.answer_p2.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.answer_p2.setPlaceholderText('Введите ответ:')
+        self.answer_p2.setValidator(validator)
+
+        self.question_p3 = QtWidgets.QLabel(self.tWidget)
+        self.question_p3.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
+
+        self.answer_p3 = QtWidgets.QLineEdit(self.tWidget)
+        self.answer_p3.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
+        self.answer_p3.setPlaceholderText('Введите ответ:')
+        self.answer_p3.setValidator(validator)
+
+        self.layout.addWidget(self.options)
+        self.layout.addWidget(self.variant)
+        self.layout.addWidget(self.question_p1)
+        self.layout.addWidget(self.answer_p1)
+        self.layout.addWidget(self.question_p2)
+        self.layout.addWidget(self.answer_p2)
+        self.layout.addWidget(self.question_p3)
+        self.layout.addWidget(self.answer_p3)
         self.layout.addWidget(self.btn_next)
         self.layout.addWidget(self.btn_back)
+        self.layout.addWidget(self.btn_end)
 
         self.tWidget.setLayout(self.layout)
 
@@ -163,19 +225,59 @@ class Ui_MainWindow(object):
 
         self.tsArea.hide()
 
+        self.update_question()
+
+    def end_test(self):
+        pass
+
     def next_question(self):
-        if self.curr_question < self.MAX_QUESTION:
-            self.curr_question += 1
+        if self.tester.current_questions_pack < 7:
+            self.update_answers()
+            self.tester.current_questions_pack += 1
+            self.update_question()
         else:
-            self.curr_question = self.MAX_QUESTION
+            self.tester.current_questions_pack = 7
 
     def previous_question(self):
-        if self.curr_question > self.MIN_QUESTION:
-            self.curr_question = self.curr_question - 1
+        if self.tester.current_questions_pack > 1:
+            self.update_answers()
+            self.tester.current_questions_pack -= 1
+            self.update_question()
         else:
-            self.curr_question = self.MIN_QUESTION
+            self.tester.current_questions_pack = 1
 
-    def retranslateUi(self, main_window):
+    def update_answers(self):
+        curr_qp = self.tester.current_questions_pack
+        q1, q2, q3 = curr_qp * 3 - 2, curr_qp * 3 - 1, curr_qp * 3
+
+        a_keys = self.tester.answers.keys()
+        input_answers = [self.answer_p1, self.answer_p2, self.answer_p3]
+        q_index = [q1, q2, q3]
+
+        for index in range(3):
+            if input_answers[index].text().isdigit():
+                if q_index[index] not in a_keys:
+                    self.tester.answers[q_index[index]] = input_answers[index].text()
+                if q_index[index] != self.tester.answers[q_index[index]]:
+                    self.tester.answers[q_index[index]] = input_answers[index].text()
+                input_answers[index].setText('')
+
+    def update_question(self):
+        curr_qp = self.tester.current_questions_pack
+        q1, q2, q3 = curr_qp * 3 - 2, curr_qp * 3 - 1, curr_qp * 3
+
+        self.question_p1.setPixmap(QtGui.QPixmap(f'img/q{q1}.png'))
+        self.question_p1.resize(self.question_p1.pixmap().height(), self.question_p1.pixmap().height())
+        self.question_p2.setPixmap(QtGui.QPixmap(f'img/q{q2}.png'))
+        self.question_p2.resize(self.question_p2.pixmap().height(), self.question_p2.pixmap().height())
+        self.question_p3.setPixmap(QtGui.QPixmap(f'img/q{q3}.png'))
+        self.question_p3.resize(self.question_p3.pixmap().height(), self.question_p3.pixmap().height())
+
+        self.answer_p1.setText(self.tester.answers.get(q1))
+        self.answer_p2.setText(self.tester.answers.get(q2))
+        self.answer_p3.setText(self.tester.answers.get(q3))
+
+    def ui_add_content(self, main_window):
         _translate = QtCore.QCoreApplication.translate
         main_window.setWindowTitle(_translate("MainWindow", "Теория телетрафика мультисервисных сетей"))
 
@@ -184,9 +286,9 @@ class Ui_MainWindow(object):
         for i in THEMES:
             self.listWidget.item(THEMES[i]).setText(i)
 
-        self.listWidget.itemClicked.connect(self.qlistAction)
+        self.listWidget.itemClicked.connect(self.menu_action)
 
-    def qlistAction(self, item):
+    def menu_action(self, item):
         item_value = int(THEMES[item.text()])
         if item_value < 13:
             self.tsArea.hide()
@@ -200,15 +302,15 @@ class Ui_MainWindow(object):
             self.tsArea.show()
 
 
-class mywindow(QtWidgets.QMainWindow):
+class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        super(mywindow, self).__init__()
-        self.ui = Ui_MainWindow()
+        super(MyWindow, self).__init__()
+        self.ui = MainWindowUI()
         self.ui.setupUi(self)
 
 
 app = QtWidgets.QApplication([])
-application = mywindow()
+application = MyWindow()
 application.show()
 
 sys.exit(app.exec())

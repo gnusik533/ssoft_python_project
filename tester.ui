@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1280</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Gubbi</family>
+    <kerning>true</kerning>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Теория телетрафика мультисервисных сетей</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListWidget" name="listWidget">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>391</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+      <underline>false</underline>
+      <strikeout>false</strikeout>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QListWidget { border-style: outset; border-width: 1px }
+QListWidget::item { border: 1px solid black }
+QListWidget::item:selected { background-color: rgb(77, 148, 255) }
+QListWidget::item:hover { background-color: rgb(153, 194, 255) }
+</string>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="lineWidth">
+     <number>5</number>
+    </property>
+    <property name="midLineWidth">
+     <number>0</number>
+    </property>
+    <property name="autoScroll">
+     <bool>true</bool>
+    </property>
+    <property name="autoScrollMargin">
+     <number>16</number>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="textElideMode">
+     <enum>Qt::ElideLeft</enum>
+    </property>
+    <property name="movement">
+     <enum>QListView::Free</enum>
+    </property>
+    <property name="flow">
+     <enum>QListView::TopToBottom</enum>
+    </property>
+    <property name="isWrapping" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="resizeMode">
+     <enum>QListView::Fixed</enum>
+    </property>
+    <property name="layoutMode">
+     <enum>QListView::SinglePass</enum>
+    </property>
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="viewMode">
+     <enum>QListView::ListMode</enum>
+    </property>
+    <property name="modelColumn">
+     <number>0</number>
+    </property>
+    <property name="uniformItemSizes">
+     <bool>false</bool>
+    </property>
+    <property name="batchSize">
+     <number>100</number>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+    <property name="selectionRectVisible">
+     <bool>false</bool>
+    </property>
+    <property name="currentRow">
+     <number>-1</number>
+    </property>
+    <property name="sortingEnabled">
+     <bool>false</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>Простейший поток</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Суммирование и разъединение простейших потоков</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Показательный закон распределения времени обслуживания</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Нестационарный Пуассоновский поток</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Теорема Литтла</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Задачи для самостоятельного решения 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Одноканальная система массового обслуживания с отказами</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Система массового обслуживания с ожиданием и без ограничения очереди</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Система массового обслуживания с ожиданием и ограничением длины очереди</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Многоканальная система массового обслуживания с отказами М/М/N/0</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Многоканальная система массового обслуживания с неограниченным ожиданием</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Многоканальная система массового обслуживания с ожиданием и ограниченной длиной очереди</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Задачи для самостоятельного решения 2</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>0</y>
+      <width>891</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-style: outset; border-width: 1px</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustToContents</enum>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>875</width>
+       <height>709</height>
+      </rect>
+     </property>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>540</y>
+        <width>861</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <stylestrategy>PreferAntialias</stylestrategy>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { 
+	border-style: outset;
+	border-width: 2px;
+	border-radius: 10px;
+	border-color: black; 
+	min-width: 10em; 
+	padding: 6px; 
+	background: rgb(140, 140, 140) 
+}
+QPushButton:hover { 
+	background: rgb(179, 179, 179) 
+}
+QPushButton:pressed {
+	font: bold;
+}</string>
+      </property>
+      <property name="text">
+       <string>Next</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>580</y>
+        <width>861</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton { 
+	border-style: outset;
+	border-width: 2px;
+	border-radius: 10px;
+	border-color: black; 
+	min-width: 10em; 
+	padding: 6px; 
+	background: rgb(140, 140, 140) 
+}
+QPushButton:hover { 
+	background: rgb(179, 179, 179) 
+}
+QPushButton:pressed {
+	font: bold;
+}</string>
+      </property>
+      <property name="text">
+       <string>Back</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
