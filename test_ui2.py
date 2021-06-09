@@ -116,11 +116,19 @@ class ProgramAuth:
 
     def set_license_path(self):
         if sys.platform == 'linux':
-            self.license_path = os.getenv('HOME') + '/ttms_tester/LICENCE'
+            path = os.getenv('HOME')
+            
+            if not os.path.exists(path + '/ttms_tester'):
+                os.mkdir(path + '/ttms_tester')
+            self.license_path = path + '/ttms_tester/LICENSE'
         elif sys.platform == 'win32':
-            self.license_path = os.path.expandvars(r'%LOCALAPPDATA%') + '/ttms_tester/LICENCE'
+            path = os.path.expandvars(r'%LOCALAPPDATA%')
+            
+            if not os.path.exists(path + '\\ttms_tester'):
+                os.mkdir(path + '\\ttms_tester')
+            self.license_path = path + '\\ttms_tester\\LICENSE'
 
-    def check_licence(self):
+    def check_license(self):
         if not os.path.isfile(self.license_path):
             return 2
         else:
@@ -149,7 +157,7 @@ class ProgramAuth:
 
             return 1
 
-    def generate_licence(self):
+    def generate_license(self):
         data = [platform.processor(),
                 platform.platform(),
                 platform.machine(),
@@ -235,13 +243,13 @@ class MainWindowUI(object):
         frame_geometry.moveCenter(center_point)
         main_window.move(frame_geometry.topLeft())
 
-        code = self.auth.check_licence()
+        code = self.auth.check_license()
 
         if code != 1:
             dialog = AuthQInputDialog(license_error_code[code])
             dialog.exec_()
             if self.auth.password_verification(dialog.textValue()):
-                self.auth.generate_licence()
+                self.auth.generate_license()
             else:
                 exit(1)
         else:
@@ -441,10 +449,13 @@ class MainWindowUI(object):
             expired_date.setText('Дата действия программы:')
 
             date_widget = QCalendarWidget()
-            date_widget.setSelectedDate(QDate(*[int(i) for i in self.auth.date.split('-')]))
+            try:
+                date_widget.setSelectedDate(QDate(*[int(i) for i in self.auth.date.split('-')]))
+            except ValueError:
+                pass
 
-            btn_licence = QPushButton('Применить')
-            btn_licence.clicked.connect(partial(self.auth.update_date, date_widget))
+            btn_license = QPushButton('Применить')
+            btn_license.clicked.connect(partial(self.auth.update_date, date_widget))
 
             grid.addWidget(old_pass, 1, 0)
             grid.addWidget(old_pass_line, 1, 1)
@@ -453,7 +464,7 @@ class MainWindowUI(object):
             grid.addWidget(btn_accept, 3, 0)
             grid.addWidget(expired_date, 4, 0)
             grid.addWidget(date_widget, 5, 0)
-            grid.addWidget(btn_licence, 6, 0)
+            grid.addWidget(btn_license, 6, 0)
             grid.addWidget(empty, 10, 0)
 
             admin_modal.setLayout(grid)
