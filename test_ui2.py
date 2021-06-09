@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 # python 3.9 | PyQt5
-import sys
-import requests
-import socket
 
+
+import os
+import socket
+import sys
+import platform
+
+from datetime import timedelta, datetime, date
 from functools import partial
 from hashlib import md5
-from datetime import date
+from cryptography.fernet import Fernet
 
-from PyQt5.QtCore import QSize, QRect, Qt, QMetaObject
+import requests
+from PyQt5.QtCore import QSize, QRect, Qt, QMetaObject, QDate
 from PyQt5.QtGui import QFont, QPixmap, QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import QSizePolicy, QWidget, QListWidget, QListWidgetItem, QScrollArea, QLabel, \
     QVBoxLayout, QPushButton, QLineEdit, QComboBox, QMessageBox, QMainWindow, QApplication, QAction, qApp, \
-    QInputDialog, QDialog, QGridLayout, QCalendarWidget, QDesktopWidget
+    QInputDialog, QDialog, QGridLayout, QCalendarWidget
 
 THEMES = {'Простейший поток': 0,
           'Суммирование и разъединение простейших потоков': 1,
@@ -30,48 +35,147 @@ THEMES = {'Простейший поток': 0,
           'Контрольная работа': 13,
           }
 
+license_error_code = {
+    1: 'Активировано',
+    2: 'Отсутствует лицензия',
+    3: 'Лицензия повреждена',
+    4: 'Время действия лицензии истекло'
+}
+
 
 class ProgramAuth:
     def __init__(self):
         self.activated = False
         self.admin_pass = '22cdd7a0eac9348c762dd4f5f4ccd889'
         self.lecturer_pass = ''
-        self.date = ''  # TODO: установить дату на текущую лицензию
+        self.date = ''
         self.connection = True
+        self.key = b'4FcAolW7-vZgbRD3N8Babjsbdp8iiurcFhx0lVHPIeY='
+        self.license_path = ''
+        self.fernet = Fernet(self.key)
+
+        self.set_license_path()
+        self.check_internet_connection()
 
     def password_verification(self, password):
         hash_pass = md5(str(password).encode()).hexdigest()
-        if hash_pass == self.admin_pass or hash_pass == self.lecturer_pass:
+
+        if hash_pass == self.admin_pass or password == self.lecturer_pass:
             return True
         else:
             return False
 
-    def set_lecturer_pass(self, password, previous_password):
+    def set_lecturer_pass(self, password, prev_password):
         password = password.text()
-        previous_password = previous_password.text()
-        hash_password = md5(str(previous_password).encode()).hexdigest()
-        if hash_password == self.lecturer_pass or (previous_password == '' and self.lecturer_pass == ''):
-            self.lecturer_pass = md5(str(password).encode()).hexdigest()
+        prev_password = prev_password.text()
+        if prev_password == self.lecturer_pass or (prev_password == '' and self.lecturer_pass == '' and password != ''):
+            self.lecturer_pass = str(password)
+            self.update_license_password()
             modal_message = QMessageBox(QMessageBox.NoIcon, 'Успешно', 'Пароль изменён')
             modal_message.exec_()
         else:
             modal_message = QMessageBox(QMessageBox.Warning, 'Ошибка', 'Пароли не совпадают')
             modal_message.exec_()
 
-    def set_date(self, calendar_date):
+    def update_license_password(self):
+        fernet = self.fernet
+        with open(self.license_path, 'rb') as license_file:
+            license_data = license_file.readlines()
+            license_data[5] = fernet.encrypt(self.lecturer_pass.encode()) + b'\n'
+            license_file.close()
+
+        with open(self.license_path, 'wb') as license_file:
+            for i in license_data:
+                license_file.write(i)
+            license_file.close()
+
+    def load_data_from_license(self):
+        fernet = self.fernet
+        with open(self.license_path, 'rb') as license_file:
+            license_data = license_file.readlines()
+            self.date = fernet.decrypt(license_data[4]).decode()
+            self.lecturer_pass = fernet.decrypt(license_data[5]).decode()
+            license_file.close()
+
+    def update_date(self, calendar_date):
         self.date = calendar_date.selectedDate().toString("yyyy-MM-dd")
 
-    def get_licence(self):
-        pass
+        fernet = self.fernet
+        with open(self.license_path, 'rb') as license_file:
+            license_data = license_file.readlines()
+            license_data[4] = fernet.encrypt(self.date.encode()) + b'\n'
+            license_file.close()
 
-    def update_licence(self, calendar_date):
-        pass
+        with open(self.license_path, 'wb') as license_file:
+            for i in license_data:
+                license_file.write(i)
+            license_file.close()
+
+        modal_message = QMessageBox(QMessageBox.NoIcon, 'Успешно', 'Время действия лицензии обновлено')
+        modal_message.exec_()
+
+    def set_license_path(self):
+        if sys.platform == 'linux':
+            self.license_path = os.getenv('HOME') + '/ttms_tester/LICENCE'
+        elif sys.platform == 'win32':
+            self.license_path = os.path.expandvars(r'%LOCALAPPDATA%') + '/ttms_tester/LICENCE'
+
+    def check_licence(self):
+        if not os.path.isfile(self.license_path):
+            return 2
+        else:
+            data = [platform.processor(), platform.platform(), platform.machine(), platform.version(),
+                    str(datetime.now().date()), self.lecturer_pass]
+            decrypted_data = []
+
+            decrypter = Fernet(self.key)
+
+            with open(self.license_path, 'rb') as license_file:
+                license_data = license_file.readlines()
+                for i in license_data:
+                    decrypt = decrypter.decrypt(i).decode()
+                    decrypted_data.append(decrypt)
+                license_file.close()
+
+            for i in range(len(data)):
+                if not data[i] == decrypted_data[i]:
+                    if i == 5:
+                        self.lecturer_pass = decrypted_data[i]
+                    elif i == 4:
+                        if datetime.strptime(data[i], '%Y-%m-%d') > datetime.strptime(decrypted_data[i], '%Y-%m-%d'):
+                            return 4
+                    else:
+                        return 3
+
+            return 1
+
+    def generate_licence(self):
+        data = [platform.processor(),
+                platform.platform(),
+                platform.machine(),
+                platform.version(),
+                str(datetime.now().date()),
+                self.lecturer_pass]
+
+        encrypted_data = []
+
+        encryptor = Fernet(self.key)
+        for i in data:
+            encrypted_data.append(encryptor.encrypt(i.encode()))
+
+        with open(self.license_path, 'wb') as license_file:
+            for i in encrypted_data:
+                license_file.write(i + b'\n')
 
     def check_date(self):
         current_date = str(date.today())
         if self.connection:
-            online_date = requests.get('http://worldclockapi.com/api/json/est/now').json()['currentDateTime'][:10]
-            if current_date != online_date:
+            api_date = requests.get('http://worldclockapi.com/api/json/utc/now').json()
+            api_date = api_date['currentDateTime'][:-1].split('T')
+            api_date = datetime.strptime(api_date[0] + ' ' + api_date[1], '%Y-%m-%d %H:%M') + timedelta(hours=4)
+            api_date = str(api_date.date())
+
+            if current_date != api_date:
                 return False
             else:
                 return True
@@ -95,6 +199,20 @@ class Testing:
         self.MAX_QUESTION = 21
 
 
+class AuthQInputDialog(QInputDialog):
+    def __init__(self, message='Войти'):
+        super(AuthQInputDialog, self).__init__()
+        self.setMinimumSize(400, 200)
+        self.setMaximumSize(400, 200)
+        self.resize(400, 200)
+        self.setInputMode(QInputDialog.TextInput)
+        self.setTextEchoMode(QLineEdit.Password)
+        self.setWindowTitle(message)
+        self.setLabelText('Введите пароль:')
+        self.setOkButtonText('ОК')
+        self.setCancelButtonText('Отмена')
+
+
 class MainWindowUI(object):
     def __init__(self):
         self.tester = Testing()
@@ -116,6 +234,19 @@ class MainWindowUI(object):
         center_point = QApplication.desktop().screenGeometry(screen).center()
         frame_geometry.moveCenter(center_point)
         main_window.move(frame_geometry.topLeft())
+
+        code = self.auth.check_licence()
+
+        if code != 1:
+            dialog = AuthQInputDialog(license_error_code[code])
+            dialog.exec_()
+            if self.auth.password_verification(dialog.textValue()):
+                self.auth.generate_licence()
+            else:
+                exit(1)
+        else:
+            self.auth.load_data_from_license()
+
 
         self.main_window = main_window
         self.centralwidget = QWidget(main_window)
@@ -169,9 +300,6 @@ class MainWindowUI(object):
         self.tester_ui(main_window)
 
         QMetaObject.connectSlotsByName(main_window)
-
-        self.auth.check_internet_connection()
-
 
     def tester_ui(self, main_window):
         self.tsArea = QScrollArea(main_window)
@@ -283,8 +411,9 @@ class MainWindowUI(object):
         self.update_question()
 
     def admin_app(self):
-        text, ok = QInputDialog.getText(self.tWidget, 'Войти', 'Введите пароль:', QLineEdit.Password)
-        if self.auth.password_verification(text):
+        dialog = AuthQInputDialog()
+        dialog.exec_()
+        if self.auth.password_verification(dialog.textValue()):
             admin_modal = QDialog(self.centralwidget)
             admin_modal.setGeometry(QRect(0, 0, 800, 600))
 
@@ -312,9 +441,10 @@ class MainWindowUI(object):
             expired_date.setText('Дата действия программы:')
 
             date_widget = QCalendarWidget()
+            date_widget.setSelectedDate(QDate(*[int(i) for i in self.auth.date.split('-')]))
 
             btn_licence = QPushButton('Применить')
-            btn_licence.clicked.connect(partial(self.auth.set_date, date_widget))
+            btn_licence.clicked.connect(partial(self.auth.update_date, date_widget))
 
             grid.addWidget(old_pass, 1, 0)
             grid.addWidget(old_pass_line, 1, 1)
@@ -328,7 +458,6 @@ class MainWindowUI(object):
 
             admin_modal.setLayout(grid)
             admin_modal.exec_()
-            # a6CR~QMaracuja1;
 
     def exit_app(self):
         cv_modal = QMessageBox(QMessageBox.NoIcon, 'Выйти', 'Вы уверены?',
@@ -444,6 +573,7 @@ class MainWindowUI(object):
             modal_message = QMessageBox(QMessageBox.Warning, 'Ошибка', 'Дата на компьютере не совпадает с реальной')
             modal_message.exec_()
             exit(2)
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
