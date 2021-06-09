@@ -60,7 +60,7 @@ class ProgramAuth:
     def password_verification(self, password):
         hash_pass = md5(str(password).encode()).hexdigest()
 
-        if hash_pass == self.admin_pass or password == self.lecturer_pass:
+        if hash_pass == self.admin_pass or (password == self.lecturer_pass and self.lecturer_pass != ''):
             return True
         else:
             return False
@@ -248,6 +248,7 @@ class MainWindowUI(object):
         if code != 1:
             dialog = AuthQInputDialog(license_error_code[code])
             dialog.exec_()
+            print(dialog.textValue())
             if self.auth.password_verification(dialog.textValue()):
                 self.auth.generate_license()
             else:
